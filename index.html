@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14221f">
+  <meta name="description" content="Elmiral ist ein 2D-Abenteuer durch eine geheimnisvolle Welt voller alter Pfade und neuer Geschichten.">
+  <title>Elmiral - Ein Abenteuer zwischen den Welten</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f5f0df;
+      --muted: #b6c1ad;
+      --night: #14221f;
+      --deep: #1d3029;
+      --moss: #536d4e;
+      --mint: #b2c798;
+      --coral: #f28c62;
+      --gold: #f1ca78;
+      --line: rgba(245, 240, 223, .2);
+      --serif: "Fraunces", Georgia, serif;
+      --sans: "DM Sans", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    body { margin: 0; background: var(--night); color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; text-decoration: none; }
+    button { color: inherit; font: inherit; }
+    ::selection { background: var(--coral); color: var(--night); }
+
+    .topbar { position: absolute; z-index: 5; inset: 0 0 auto; display: flex; align-items: center; justify-content: space-between; min-height: 82px; padding: 0 clamp(24px, 6vw, 92px); border-bottom: 1px solid rgba(245, 240, 223, .18); }
+    .brand { display: inline-flex; align-items: center; gap: 11px; font-size: 15px; font-weight: 700; letter-spacing: .08em; }
+    .brand-mark { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--gold); border-radius: 50%; color: var(--gold); font-family: var(--serif); font-size: 19px; }
+    .nav { display: flex; align-items: center; gap: clamp(22px, 4vw, 52px); font-size: 12px; font-weight: 600; }
+    .nav a:not(.nav-cta) { color: rgba(245, 240, 223, .82); transition: color .2s ease; }
+    .nav a:not(.nav-cta):hover { color: var(--gold); }
+    .nav-cta { display: inline-flex; align-items: center; gap: 12px; padding: 12px 17px; border: 1px solid rgba(245, 240, 223, .55); transition: background .2s ease, color .2s ease; }
+    .nav-cta:hover { background: var(--ink); color: var(--night); }
+    .menu-toggle { display: none; width: 42px; height: 42px; place-items: center; border: 1px solid var(--line); background: transparent; cursor: pointer; }
+
+    .hero { position: relative; display: grid; min-height: 750px; height: min(900px, 100svh); align-items: center; overflow: hidden; isolation: isolate; background: #243b34; }
+    .hero-art { position: absolute; z-index: -2; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 58%; }
+    .hero::after { position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, rgba(15, 29, 26, .9) 0%, rgba(15, 29, 26, .66) 35%, rgba(15, 29, 26, .08) 75%), linear-gradient(0deg, rgba(15, 29, 26, .78), transparent 35%); content: ""; }
+    .hero-content { width: min(600px, 90%); margin: 72px 0 30px clamp(24px, 11vw, 168px); animation: arrive .8s both; }
+    .eyebrow { display: flex; align-items: center; gap: 12px; margin: 0 0 23px; color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+    .eyebrow::before { width: 34px; height: 1px; background: currentColor; content: ""; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 660px; margin-bottom: 20px; font-family: var(--serif); font-size: clamp(72px, 12vw, 156px); font-weight: 500; letter-spacing: 0; line-height: .82; }
+    h1 span { display: block; margin: 16px 0 0 9px; color: var(--gold); font-size: .27em; font-family: var(--sans); font-weight: 600; letter-spacing: .23em; text-transform: uppercase; }
+    .hero-copy { max-width: 380px; margin: 31px 0 32px; color: rgba(245, 240, 223, .87); font-size: 15px; line-height: 1.8; }
+    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
+    .button { display: inline-flex; min-height: 50px; align-items: center; justify-content: center; gap: 14px; padding: 0 19px; background: var(--coral); color: #1b2821; font-size: 12px; font-weight: 700; transition: transform .2s ease, background .2s ease; }
+    .button:hover { transform: translateY(-2px); background: #ffa078; }
+    .text-link { display: inline-flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 600; }
+    .text-link svg, .button svg { width: 16px; height: 16px; }
+    .text-link:hover { color: var(--gold); }
+    .hero-index { position: absolute; right: clamp(24px, 6vw, 92px); bottom: 40px; display: flex; align-items: center; gap: 13px; color: rgba(245, 240, 223, .75); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    .hero-index::before { width: 42px; height: 1px; background: var(--gold); content: ""; }
+
+    .intro { display: grid; grid-template-columns: 1fr 1fr; gap: 9vw; align-items: end; padding: 125px clamp(24px, 11vw, 168px) 120px; background: var(--night); }
+    .intro .eyebrow { margin-bottom: 26px; }
+    .intro h2, .journey h2 { max-width: 600px; margin-bottom: 0; font-family: var(--serif); font-size: clamp(42px, 6vw, 76px); font-weight: 500; letter-spacing: 0; line-height: 1.02; }
+    .intro h2 em { color: var(--mint); font-weight: 500; }
+    .intro-copy { max-width: 435px; padding-bottom: 6px; color: var(--muted); font-size: 14px; line-height: 1.9; }
+    .intro-copy p { margin-bottom: 24px; }
+    .intro-copy .text-link { color: var(--gold); }
+
+    .world { position: relative; min-height: 610px; overflow: hidden; background: #66806a; }
+    .world-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .world-shade { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(18, 34, 29, .89), transparent 58%), linear-gradient(90deg, rgba(18, 34, 29, .15), transparent 70%); }
+    .world-caption { position: absolute; right: clamp(24px, 11vw, 168px); bottom: 63px; left: clamp(24px, 11vw, 168px); display: flex; align-items: end; justify-content: space-between; gap: 32px; }
+    .world-caption .eyebrow { margin-bottom: 16px; }
+    .world-caption h2 { max-width: 540px; margin: 0; font-family: var(--serif); font-size: clamp(38px, 6vw, 70px); font-weight: 500; line-height: 1; }
+    .world-note { max-width: 250px; margin: 0 0 4px; color: rgba(245, 240, 223, .84); font-size: 12px; line-height: 1.8; }
+
+    .journey { padding: 116px clamp(24px, 11vw, 168px) 130px; background: #e8e0ca; color: #20312b; }
+    .journey-head { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 58px; }
+    .journey .eyebrow { color: #9a573e; }
+    .journey h2 { max-width: 620px; }
+    .journey-head > p { max-width: 270px; margin: 0 0 5px; color: #536258; font-size: 13px; line-height: 1.8; }
+    .chapters { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid rgba(32, 49, 43, .28); }
+    .chapter { min-height: 165px; padding: 25px 24px 0 0; }
+    .chapter + .chapter { padding-left: 24px; border-left: 1px solid rgba(32, 49, 43, .28); }
+    .chapter-number { display: block; margin-bottom: 19px; color: #a26043; font-size: 10px; font-weight: 700; letter-spacing: .14em; }
+    .chapter h3 { margin-bottom: 8px; font-family: var(--serif); font-size: 25px; font-weight: 500; }
+    .chapter p { max-width: 300px; margin: 0; color: #536258; font-size: 12px; line-height: 1.75; }
+
+    .closing { position: relative; display: grid; min-height: 390px; place-items: center; overflow: hidden; padding: 80px 24px; background: var(--deep); text-align: center; }
+    .closing::before, .closing::after { position: absolute; width: 270px; aspect-ratio: 1; border: 1px solid rgba(241, 202, 120, .18); border-radius: 50%; content: ""; }
+    .closing::before { top: -175px; left: -75px; box-shadow: 0 0 0 35px rgba(241, 202, 120, .04), 0 0 0 75px rgba(241, 202, 120, .03); }
+    .closing::after { right: -115px; bottom: -195px; width: 340px; }
+    .closing-content { position: relative; z-index: 1; }
+    .closing .eyebrow { justify-content: center; }
+    .closing h2 { margin: 0 0 27px; font-family: var(--serif); font-size: clamp(46px, 7vw, 82px); font-weight: 500; line-height: .98; }
+    .closing h2 em { color: var(--gold); font-weight: 500; }
+    .closing .button { background: var(--gold); }
+    .closing .button:hover { background: #ffdc91; }
+
+    footer { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 27px clamp(24px, 6vw, 92px); border-top: 1px solid var(--line); color: rgba(245, 240, 223, .68); font-size: 10px; }
+    footer .brand { color: var(--ink); font-size: 12px; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a:hover { color: var(--gold); }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    @keyframes arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+    @media (max-width: 720px) {
+      .topbar { min-height: 70px; padding: 0 22px; }
+      .menu-toggle { display: grid; }
+      .nav { position: absolute; top: 69px; right: 0; left: 0; display: none; align-items: stretch; gap: 0; padding: 8px 22px 20px; background: #14221f; border-bottom: 1px solid var(--line); }
+      .nav.open { display: flex; flex-direction: column; }
+      .nav a:not(.nav-cta) { padding: 13px 0; border-bottom: 1px solid var(--line); }
+      .nav-cta { justify-content: center; margin-top: 15px; }
+      .hero { min-height: 720px; height: 92svh; max-height: 900px; align-items: end; }
+      .hero-art { object-position: 61% center; }
+      .hero::after { background: linear-gradient(0deg, rgba(15, 29, 26, .94), rgba(15, 29, 26, .56) 45%, rgba(15, 29, 26, .05) 100%); }
+      .hero-content { width: auto; margin: 0 24px 112px; }
+      h1 { font-size: clamp(75px, 20vw, 120px); }
+      .hero-copy { max-width: 350px; font-size: 14px; }
+      .hero-index { right: 24px; bottom: 31px; }
+      .intro { grid-template-columns: 1fr; gap: 27px; padding: 88px 24px 84px; }
+      .intro h2 { font-size: clamp(46px, 12vw, 66px); }
+      .intro-copy { max-width: 500px; }
+      .world { min-height: 550px; }
+      .world-art { object-position: 57% center; }
+      .world-caption { right: 24px; bottom: 38px; left: 24px; display: block; }
+      .world-note { max-width: 330px; margin-top: 15px; }
+      .journey { padding: 84px 24px 90px; }
+      .journey-head { display: block; margin-bottom: 38px; }
+      .journey-head > p { margin-top: 19px; }
+      .chapters { grid-template-columns: 1fr; }
+      .chapter, .chapter + .chapter { min-height: auto; padding: 22px 0; border-bottom: 1px solid rgba(32, 49, 43, .28); border-left: 0; }
+      .chapter-number { margin-bottom: 10px; }
+      footer { align-items: flex-start; flex-wrap: wrap; padding: 23px 24px; }
+      footer > span { width: 100%; order: 2; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#start" aria-label="Elmiral Startseite"><span class="brand-mark" aria-hidden="true">E</span> ELMIRAL</a>
+    <button class="menu-toggle" type="button" aria-label="Menue oeffnen" aria-expanded="false" aria-controls="navigation">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <nav class="nav" id="navigation" aria-label="Hauptnavigation">
+      <a href="#welt">Die Welt</a>
+      <a href="#reise">Deine Reise</a>
+      <a class="nav-cta" href="#ende">Elmiral entdecken <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="start" aria-labelledby="hero-title">
+      <svg class="hero-art" viewBox="0 0 1600 950" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Eine kleine Gestalt blickt von einer bewachsenen Klippe auf eine versunkene Tempelstadt im Abendlicht">
+        <defs>
+          <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#d58e6c"/><stop offset=".48" stop-color="#e3b879"/><stop offset="1" stop-color="#738a69"/></linearGradient>
+          <linearGradient id="water" x2="0" y2="1"><stop stop-color="#698773"/><stop offset="1" stop-color="#314e49"/></linearGradient>
+          <linearGradient id="haze" x2="0" y2="1"><stop stop-color="#f6cc82" stop-opacity=".5"/><stop offset="1" stop-color="#f6cc82" stop-opacity="0"/></linearGradient>
+        </defs>
+        <rect width="1600" height="950" fill="url(#sky)"/>
+        <circle cx="1115" cy="260" r="112" fill="#f3d290" opacity=".88"/>
+        <path d="M0 422 155 313l114 68 193-177 151 184 147-93 202 145 151-117 178 122 152-75 157 114v270H0Z" fill="#9c9870" opacity=".72"/>
+        <path d="m0 502 176-82 156 69 190-139 143 139 155-53 171 102 187-109 137 95 162-70 123 75v231H0Z" fill="#617a61"/>
+        <path d="M0 559q257-39 501 12t519-5q284-58 580 17v367H0Z" fill="url(#water)"/>
+        <path d="M886 483v-82h30v-54h42v54h26v82h38v-112h27v-70h50v70h29v112h40v-89h24v-46h39v46h20v89h37v121H832V483Z" fill="#a99770" opacity=".82"/>
+        <path d="M884 495h383v16H884zM910 539h334v10H910zM949 447h22v49h-22zM1082 396h23v99h-23zM1222 424h17v72h-17z" fill="#d6bd87" opacity=".73"/>
+        <path d="M0 650q147-108 305-52t241 30q87-70 187-16l166 338H0Z" fill="#29433a"/>
+        <path d="M1600 620q-123-75-249 14t-199 65q-113-48-222 58l-89 293h759Z" fill="#263d35"/>
+        <path d="M0 784q201-73 365 9t279 157H0Zm1600-63q-176 37-284 104t-133 125h417Z" fill="#1d342e"/>
+        <g fill="#273d31"><path d="m126 626 22-106 22 106zM164 629l27-137 27 137zM224 631l18-88 18 88zM1374 653l25-129 25 129zM1432 628l17-92 17 92zM1500 636l25-128 25 128z"/><path d="M143 585h12v73h-12zm43-3h12v66h-12zm1187 26h13v61h-13zm62-31h11v58h-11zm76 15h13v65h-13z" fill="#d29a5c" opacity=".65"/></g>
+        <path d="M0 835q180-80 353-3 119 53 199 118H0Zm1600-92q-125-12-239 54-73 42-117 153h356Z" fill="#172a26"/>
+        <g fill="#cf8961" opacity=".6"><path d="M880 594h45v4h-45zm79 31h62v3h-62zm114-43h47v4h-47zm-195 85h38v3h-38zm241 30h55v3h-55zm100-76h42v3h-42z"/></g>
+        <g transform="translate(384 725)"><path d="M-10 52h94v9h-94z" fill="#182a25" opacity=".65"/><path d="M19 28q1-20 15-24 15 4 15 24v23H19z" fill="#d9815e"/><circle cx="34" cy="-2" r="10" fill="#efc68a"/><path d="M23-5q3-15 16-11 10 3 8 13l-5 3q-4-8-13-7z" fill="#384b39"/><path d="M20 48 12 69h9l12-17 9 17h10L44 48z" fill="#d3b078"/><path d="M47 11 67 31l-4 4-22-17z" fill="#53694c"/><path d="m63 32 10 6-3 4-10-5z" fill="#e5c17c"/><path d="M73 37v18" stroke="#e5c17c" stroke-width="2"/></g>
+        <rect width="1600" height="950" fill="url(#haze)"/>
+        <g fill="#f4d59a" opacity=".65"><circle cx="254" cy="239" r="2"/><circle cx="313" cy="298" r="3"/><circle cx="947" cy="223" r="2"/><circle cx="1332" cy="349" r="2"/><circle cx="729" cy="305" r="3"/></g>
+      </svg>
+      <div class="hero-content">
+        <p class="eyebrow">Ein handgemaltes 2D-Abenteuer</p>
+        <h1 id="hero-title">Elmiral<span>Jenseits des Bekannten</span></h1>
+        <p class="hero-copy">Manche Pfade findest du nicht auf einer Karte. Folge dem Licht, lausche den alten Geschichten und entdecke, was hinter dem Horizont auf dich wartet.</p>
+        <div class="actions">
+          <a class="button" href="#welt">Die Welt entdecken <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+          <a class="text-link" href="#reise">Mehr über Elmiral <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+      <div class="hero-index">Eine Welt voller Geschichten</div>
+    </section>
+
+    <section class="intro" id="welt">
+      <div class="reveal"><p class="eyebrow">Willkommen in Elmiral</p><h2>Ein leiser Ruf.<br><em>Ein weiter Weg.</em></h2></div>
+      <div class="intro-copy reveal"><p>Zwischen moosbedeckten Ruinen und stillen Küsten liegt ein Land, das mehr verbirgt, als es preisgibt. Was als Reise ins Ungewisse beginnt, wird zu einer Begegnung mit den Spuren einer vergessenen Zeit.</p><a class="text-link" href="#reise">Deine Reise beginnt hier <span aria-hidden="true">→</span></a></div>
+    </section>
+
+    <section class="world" aria-label="Die Landschaften von Elmiral">
+      <svg class="world-art" viewBox="0 0 1600 740" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Smaragdgrüne Berge und ein verborgener Weg führen durch die Landschaft">
+        <defs><linearGradient id="field" x2="0" y2="1"><stop stop-color="#a9ad80"/><stop offset=".5" stop-color="#72896a"/><stop offset="1" stop-color="#345345"/></linearGradient><linearGradient id="sunbeam" x2="0" y2="1"><stop stop-color="#ffe5a8" stop-opacity=".38"/><stop offset="1" stop-color="#ffe5a8" stop-opacity="0"/></linearGradient></defs>
+        <rect width="1600" height="740" fill="url(#field)"/><circle cx="421" cy="202" r="79" fill="#f3d69a" opacity=".85"/>
+        <path d="m0 396 241-253 193 184 194-250 271 295 167-192 232 222 138-132 164 137v333H0Z" fill="#657b65"/>
+        <path d="m0 458 190-113 183 67 244-158 178 181 216-135 162 92 175-101 252 116v333H0Z" fill="#405e4d"/>
+        <path d="M0 513q214-102 404-6 178 91 358-7 218-119 420-28 237 107 418 8v260H0Z" fill="#2c4c3e"/>
+        <path d="M681 740q188-170 266-258 44-50 70-143 32 114 1 180-38 79-154 221Z" fill="#c3a778" opacity=".85"/>
+        <path d="M0 639q223-93 394-14t243 115H0Zm1600-174q-176 21-310 117t-151 158h461Z" fill="#213c32"/>
+        <path d="M395 0h682L799 496Z" fill="url(#sunbeam)"/>
+        <g fill="#233b30"><path d="m96 548 34-165 34 165zM156 563l24-120 24 120zM1430 537l31-157 31 157zM1493 548l24-123 24 123zM276 590l21-100 21 100zM1308 570l24-119 24 119z"/></g>
+        <g fill="#d7b681" opacity=".6"><path d="M758 548h38v4h-38zm-72 49h48v3h-48zm124 28h62v4h-62zm-180 36h48v3h-48z"/></g>
+        <rect width="1600" height="740" fill="url(#sunbeam)"/>
+      </svg>
+      <div class="world-shade"></div>
+      <div class="world-caption reveal"><div><p class="eyebrow">Ein Land mit Vergangenheit</p><h2>Schau genauer hin.</h2></div><p class="world-note">Hinter jedem stillen Ort wartet eine Geschichte. Manche findest du in alten Steinen, andere in den Menschen, denen du begegnest.</p></div>
+    </section>
+
+    <section class="journey" id="reise">
+      <div class="journey-head reveal"><div><p class="eyebrow">Schritt für Schritt</p><h2>Deine Reise.<br>Dein Elmiral.</h2></div><p>Kein Weg ist vorgezeichnet. Nimm dir Zeit, lass dich treiben und finde heraus, wohin dich deine Neugier führt.</p></div>
+      <div class="chapters">
+        <article class="chapter reveal"><span class="chapter-number">01 / ENTDECKEN</span><h3>Verborgene Pfade</h3><p>Folge gewundenen Wegen durch eine Welt, die dich immer wieder überrascht.</p></article>
+        <article class="chapter reveal"><span class="chapter-number">02 / BEGEGNEN</span><h3>Lebendige Geschichten</h3><p>Lerne die Bewohner Elmirals kennen und höre zu, wenn sie erzählen.</p></article>
+        <article class="chapter reveal"><span class="chapter-number">03 / ERINNERN</span><h3>Alte Spuren</h3><p>Setze vergessene Fragmente zusammen und entdecke, was einst war.</p></article>
+      </div>
+    </section>
+
+    <section class="closing" id="ende"><div class="closing-content reveal"><p class="eyebrow">Der Horizont wartet</p><h2>Wohin führt<br><em>dein Weg?</em></h2><a class="button" href="#start">Zurück nach Elmiral <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></div></section>
+  </main>
+
+  <footer><a class="brand" href="#start"><span class="brand-mark" aria-hidden="true">E</span> ELMIRAL</a><span>Ein 2D-Abenteuer zwischen den Welten.</span><div class="footer-links"><a href="#welt">Die Welt</a><a href="#reise">Deine Reise</a><a href="#start">Nach oben ↑</a></div></footer>
+
+  <script>
+    const menuButton = document.querySelector('.menu-toggle');
+    const navigation = document.querySelector('#navigation');
+
+    menuButton.addEventListener('click', () => {
+      const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+      menuButton.setAttribute('aria-expanded', String(!isOpen));
+      menuButton.setAttribute('aria-label', isOpen ? 'Menue oeffnen' : 'Menue schliessen');
+      navigation.classList.toggle('open', !isOpen);
+    });
+
+    navigation.addEventListener('click', (event) => {
+      if (event.target.closest('a')) {
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.setAttribute('aria-label', 'Menue oeffnen');
+        navigation.classList.remove('open');
+      }
+    });
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
+  </script>
+</body>
+</html>
